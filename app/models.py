@@ -6,14 +6,14 @@ from app.search import add_to_index, remove_from_index, query_index
 class SearchableMixin(object):
     @classmethod
     def search(cls, expression, page, per_page):
-        ids, total = query_index(cls.__tablename__, expression, page, per_page)
-        if total == 0:
-            return cls.query.filter_by(id=0), 0
+        ids, suggestion = query_index(cls.__tablename__, expression, page, per_page)
+        #if total == 0:
+        #    return cls.query.filter_by(id=0), 0
         when = []
         for i in range(len(ids)):
             when.append((ids[i], i))
         return cls.query.filter(cls.id.in_(ids)).order_by(
-            db.case(when, value=cls.id)), total
+            db.case(when, value=cls.id)), suggestion
 
     @classmethod
     def before_commit(cls, session):
@@ -99,6 +99,7 @@ class Player(SearchableMixin, PaginatedAPIMixin, db.Model):
             data = {
                 'id': self.id,
                 'player_name': self.player_name,
+                'player_image': self.player_image,
                 'positions': self.position,
                 'first_nba_season': self.first_nba_season,
                 'shooting': {
@@ -123,3 +124,6 @@ class Player(SearchableMixin, PaginatedAPIMixin, db.Model):
                 'turnovers': self.turnovers
             }
             return data
+
+        def __repr__(self):
+            return '<Player: {}>'.format(self.player_name)
