@@ -27,3 +27,10 @@ def get_player_list_letter(startswith):
 def get_player_name(player_name):
     player = Player.query.filter_by(player_name=player_name.replace('+', ' ')).first_or_404()
     return jsonify(player.to_dict())
+
+@bp.route('/search/<string:player_name>', methods=['GET'])
+def search_players(player_name):
+    per_page = 1000
+    page = 1
+    players = Player.search_to_dict(Player.search(player_name, page, per_page))
+    return jsonify(players)

@@ -6,14 +6,14 @@ from app.search import add_to_index, remove_from_index, query_index
 class SearchableMixin(object):
     @classmethod
     def search(cls, expression, page, per_page):
-        ids, suggestion = query_index(cls.__tablename__, expression, page, per_page)
-        #if total == 0:
-        #    return cls.query.filter_by(id=0), 0
+        ids, total, res = query_index(cls.__tablename__, expression, page, per_page)
+        if total == 0:
+            return cls.query.filter_by(id=0), 0, 0
         when = []
         for i in range(len(ids)):
             when.append((ids[i], i))
         return cls.query.filter(cls.id.in_(ids)).order_by(
-            db.case(when, value=cls.id)), suggestion
+            db.case(when, value=cls.id)), total, res
 
     @classmethod
     def before_commit(cls, session):
@@ -65,6 +65,16 @@ class PaginatedAPIMixin(object):
                 'prev': url_for(endpoint, page=page - 1, per_page=per_page,
                                 **kwargs) if resources.has_prev else None
             }
+        }
+        return data
+
+    @staticmethod
+    def search_to_dict(query):
+        resources = query[0]
+        total = query[1]
+        data = {
+            'items': [item.to_dict() for item in resources],
+            'total': total
         }
         return data
 
