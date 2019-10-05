@@ -1,1 +1,1 @@
-Web: gunicorn app:comparenba
+web gunicorn app:app
