@@ -1,1 +1,1 @@
-web gunicorn comparenba:app
+web gunicorn wsgi:app
