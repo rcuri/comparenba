@@ -25,7 +25,7 @@ def player_urls():
     for letter in letters:
         url = base_url + letter + "/"
         players = driver.get(url)
-        players_soup = BeautifulSoup(driver.page_source, 'html.parser') 
+        players_soup = BeautifulSoup(driver.page_source, 'html.parser')
         names = players_soup.findAll('th', attrs={'data-stat':'player', 'scope':'row'})
         for name in names:
             player_url = bball_ref_url + name.find('a')['href']
@@ -181,7 +181,6 @@ def populate_database(db):
             return e, data
 
     def selenium_queue_listener(data_queue, worker_queue, db, app):
-        print(app)
         with app.app_context():
             while True:
                 current_data = data_queue.get()

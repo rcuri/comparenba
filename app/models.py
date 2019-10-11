@@ -1,7 +1,7 @@
 from app import db
 from flask import url_for
 from app.search import add_to_index, remove_from_index, query_index
-
+from passlib.apps import custom_app_context as pwd_context
 
 class SearchableMixin(object):
     @classmethod
@@ -134,6 +134,25 @@ class Player(SearchableMixin, PaginatedAPIMixin, db.Model):
                 'turnovers': self.turnovers
             }
             return data
+        def from_dict(self, data, new_user=False):
+            for field in  Player.__table__.columns.keys():
+                if field != 'id' and field in data:
+                    setattr(self, field, data[field])
+
 
         def __repr__(self):
             return '<Player: {}>'.format(self.player_name)
+
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), index=True)
+    password_hash = db.Column(db.String(128))
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
