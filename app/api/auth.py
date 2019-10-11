@@ -9,6 +9,7 @@ from app import db
 auth = HTTPBasicAuth()
 
 @bp.route('/users', methods=['POST'])
+@auth.login_required
 def new_user():
     username = request.json.get('username')
     password = request.json.get('password')
