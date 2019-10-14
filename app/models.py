@@ -131,7 +131,10 @@ class Player(SearchableMixin, PaginatedAPIMixin, db.Model):
                 'assists': self.assists,
                 'steals': self.steals,
                 'blocks': self.blocks,
-                'turnovers': self.turnovers
+                'turnovers': self.turnovers,
+                '_links': {
+                    'self': url_for('api.get_player_id', id=self.id)
+                }
             }
             return data
         def from_dict(self, data, new_user=False):
@@ -152,7 +155,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
 
     def hash_password(self, password):
-        self.password_hash = pwd_context.encrypt(password)
+        self.password_hash = pwd_context.hash(password)
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)

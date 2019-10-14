@@ -31,14 +31,14 @@ def get_player_list_letter(startswith):
                     page, per_page, 'api.get_player_list_letter', startswith=startswith)
     return jsonify(data)
 
-@bp.route('/search/<string:player_name>', methods=['GET'])
+@bp.route('/players/search/<string:player_name>', methods=['GET'])
 def search_players(player_name):
     per_page = 1000
     page = 1
     players = Player.search_to_dict(Player.search(player_name, page, per_page))
     return jsonify(players)
 
-@bp.route('/delete/<int:id>', methods=['DELETE'])
+@bp.route('/players/delete/<int:id>', methods=['DELETE'])
 @auth.login_required
 def delete_player(id):
     player = Player.query.filter_by(id=id).first_or_404()
@@ -47,7 +47,7 @@ def delete_player(id):
     db.session.commit()
     return jsonify(data)
 
-@bp.route('/add', methods=['POST'])
+@bp.route('/players', methods=['POST'])
 @auth.login_required
 def add_player():
     data = request.get_json() or {}
@@ -62,7 +62,7 @@ def add_player():
     response.headers['Location'] = url_for('api.get_player_id', id=player.id)
     return response
 
-@bp.route('/update/<int:id>', methods=['PUT'])
+@bp.route('/players/update/<int:id>', methods=['PUT'])
 @auth.login_required
 def update_player(id):
     player = Player.query.get_or_404(id)
