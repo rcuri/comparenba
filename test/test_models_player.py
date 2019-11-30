@@ -6,6 +6,7 @@ from app import db
 from flask import url_for
 from app.models import Player
 from config import TestingConfig
+from app.populate_players_again import populate_database
 
 
 def test_player_db_create(app):
@@ -18,6 +19,7 @@ def test_player_db_create(app):
     db.session.commit()
 
     assert db.session.query(Player).one()
+
 
 def test_player_db_empty(app):
     app = app(TestingConfig)

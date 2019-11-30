@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from elasticsearch import Elasticsearch
-from config import DevelopmentConfig
+from config import DevelopmentConfig, TestingConfig
 import os
 
 
@@ -12,7 +12,12 @@ db = SQLAlchemy()
 migrate = Migrate()
 cors = CORS()
 
-def create_app(config_class=DevelopmentConfig):
+
+def create_app(config_class=TestingConfig):
+    """
+    Flask app factory function. Call create_app to get a flask app instance.
+    Register blueprints and extensions in this function.
+    """
     app = Flask(__name__)
 
     app.config.from_object(config_class)
@@ -27,5 +32,6 @@ def create_app(config_class=DevelopmentConfig):
             if app.config['ELASTICSEARCH_URL'] else None
 
     return app
+
 
 from app import models
