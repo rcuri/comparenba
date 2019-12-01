@@ -72,10 +72,10 @@ class Config(object):
     POSTS_PER_PAGE = 25
     CACHE = {
         'CACHE_TYPE': 'redis',
-        'CACHE_KEY_PREFIX': 'fcache',
-        'CACHE_REDIS_HOST': 'localhost',
-        'CACHE_REDIS_PORT': '6379',
-        'CACHE_REDIS_URL': 'redis://localhost:6379'
+        'CACHE_REDIS_HOST': os.environ.get('CACHE_REDIS_HOST') or 'localhost',
+        'CACHE_REDIS_PORT': os.environ.get('CACHE_REDIS_PORT') or '6379',
+        'CACHE_REDIS_URL': os.environ.get('CACHE_REDIS_URL') or \
+        'redis://localhost:6379'
     }
     DEBUG = False
     TESTING = False

@@ -36,7 +36,7 @@ def get_all_players():
     returns JSON response.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = min(request.args.get('per_page', 500, type=int), 50)
+    per_page = max(request.args.get('per_page', 500, type=int), 500)
     data = Player.to_collection_dict(
         Player.query, page, per_page, 'api.get_all_players')
     return jsonify(data)
