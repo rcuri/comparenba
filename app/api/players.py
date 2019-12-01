@@ -30,13 +30,14 @@ def get_player_name(player_name):
 
 
 @bp.route('/players/index/', methods=['GET'])
+@cache.cached()
 def get_all_players():
     """
     Queries database for the entire player table, paginates results, and
     returns JSON response.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = max(request.args.get('per_page', 500, type=int), 500)
+    per_page = max(request.args.get('per_page', 500, type=int), 1000)
     data = Player.to_collection_dict(
         Player.query, page, per_page, 'api.get_all_players')
     return jsonify(data)
