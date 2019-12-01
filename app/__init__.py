@@ -13,9 +13,9 @@ cors = CORS()
 cache = Cache()
 
 
-def create_app(config_class='config.DevelopmentConfig'):
+def create_app(config_class='config.ProductionConfig'):
     """
-    Flask app factory using DevelopmentConfig (config_class) configuration.
+    Flask app factory using ProductionConfig (config_class) configuration.
     """
     app = Flask(__name__)
     app.config.from_object(config_class)
