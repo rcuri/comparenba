@@ -3,13 +3,13 @@ FLASK_APP=comparenba.py
 #development
 DEV_POSTGRES_URL=localhost
 DEV_POSTGRES_USER=rodrigocuriel
-DEV_POSTGRES_PW=whatitdo7
+DEV_POSTGRES_PW=""
 DEV_POSTGRES_DB=champion
 
 #testing
 export TESTING_POSTGRES_URL="localhost"
 export TESTING_POSTGRES_USER="rodrigocuriel"
-export TESTING_POSTGRES_PW="whatitdo7"
+export TESTING_POSTGRES_PW=""
 export TESTING_POSTGRES_DB="test_db"
 
 #production
