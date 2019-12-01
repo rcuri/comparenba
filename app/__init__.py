@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_caching import Cache
 from flask_cors import CORS
 from elasticsearch import Elasticsearch
-from config import DevelopmentConfig, CacheConfig
+from config import DevelopmentConfig, ProductionConfig
 import os
 
 
