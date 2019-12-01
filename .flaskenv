@@ -1,10 +1,12 @@
 FLASK_APP=comparenba.py
 
+export FLASK_ENV=development
+
 #development
-DEV_POSTGRES_URL=localhost
-DEV_POSTGRES_USER=rodrigocuriel
-DEV_POSTGRES_PW=whatitdo7
-DEV_POSTGRES_DB=champion
+export DEV_POSTGRES_URL=localhost
+export DEV_POSTGRES_USER=rodrigocuriel
+export DEV_POSTGRES_PW=whatitdo7
+export DEV_POSTGRES_DB=champion
 
 #testing
 export TESTING_POSTGRES_URL="localhost"

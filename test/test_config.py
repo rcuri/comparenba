@@ -5,7 +5,6 @@ load_dotenv('.flaskenv')
 from test.support.configure_test import app
 from config import (
     get_env_db_url,
-    Config,
     TestingConfig,
     DevelopmentConfig,
     ProductionConfig,
@@ -14,7 +13,7 @@ from config import (
 
 def test_development_config(app):
     """Test DevelopmentConfig configuration."""
-    app = app(DevelopmentConfig)
+    app = app('config.DevelopmentConfig')
     DB_URL = get_env_db_url('development')
     assert app.config['DEBUG']
     assert not app.config['TESTING']
@@ -22,7 +21,7 @@ def test_development_config(app):
 
 def test_testing_config(app):
     """Test TestingConfig configuration."""
-    app = app(TestingConfig)
+    app = app('config.TestingConfig')
     DB_URL = get_env_db_url("testing")
     assert app.config["DEBUG"]
     assert app.config["TESTING"]
@@ -32,7 +31,7 @@ def test_testing_config(app):
 
 def test_production_config(app):
     """Test ProductionConfig configuration."""
-    app = app(ProductionConfig)
+    app = app('config.ProductionConfig')
     DB_URL = get_env_db_url("production")
     assert not app.config["DEBUG"]
     assert not app.config["TESTING"]

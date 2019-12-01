@@ -1,5 +1,6 @@
 import os
 
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -33,31 +34,25 @@ def get_env_db_url(env_setting):
     Create URL to connect app to specific database using create_db_url() and
     return the resulting URL string.
     """
-    if env_setting == "development":
-        POSTGRES_USER = get_env_variable("DEV_POSTGRES_USER")
-        POSTGRES_PW = get_env_variable("DEV_POSTGRES_PW")
-        POSTGRES_URL = get_env_variable("DEV_POSTGRES_URL")
-        POSTGRES_DB = get_env_variable("DEV_POSTGRES_DB")
-    elif env_setting == "testing":
-        POSTGRES_USER = get_env_variable("TESTING_POSTGRES_USER")
-        POSTGRES_PW = get_env_variable("TESTING_POSTGRES_PW")
-        POSTGRES_URL = get_env_variable("TESTING_POSTGRES_URL")
-        POSTGRES_DB = get_env_variable("TESTING_POSTGRES_DB")
-    elif env_setting == "production":
-        POSTGRES_USER = get_env_variable("PROD_POSTGRES_USER")
-        POSTGRES_PW = get_env_variable("PROD_POSTGRES_PW")
-        POSTGRES_URL = get_env_variable("PROD_POSTGRES_URL")
-        POSTGRES_DB = get_env_variable("PROD_POSTGRES_DB")
+    if env_setting == 'development':
+        POSTGRES_USER = get_env_variable('DEV_POSTGRES_USER')
+        POSTGRES_PW = get_env_variable('DEV_POSTGRES_PW')
+        POSTGRES_URL = get_env_variable('DEV_POSTGRES_URL')
+        POSTGRES_DB = get_env_variable('DEV_POSTGRES_DB')
+    elif env_setting == 'testing':
+        POSTGRES_USER = get_env_variable('TESTING_POSTGRES_USER')
+        POSTGRES_PW = get_env_variable('TESTING_POSTGRES_PW')
+        POSTGRES_URL = get_env_variable('TESTING_POSTGRES_URL')
+        POSTGRES_DB = get_env_variable('TESTING_POSTGRES_DB')
+    elif env_setting == 'production':
+        POSTGRES_USER = get_env_variable('PROD_POSTGRES_USER')
+        POSTGRES_PW = get_env_variable('PROD_POSTGRES_PW')
+        POSTGRES_URL = get_env_variable('PROD_POSTGRES_URL')
+        POSTGRES_DB = get_env_variable('PROD_POSTGRES_DB')
 
 
     return create_db_url(
         POSTGRES_USER, POSTGRES_PW, POSTGRES_URL, POSTGRES_DB)
-
-
-# Get db URLs for each environment
-DEV_DB_URL = get_env_db_url("development")
-TESTING_DB_URL = get_env_db_url("testing")
-PROD_DB_URL = get_env_db_url("production")
 
 
 class Config(object):
@@ -66,7 +61,6 @@ class Config(object):
     override environment variables depending on current environment.
     """
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = DEV_DB_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL') or None
     POSTS_PER_PAGE = 25
@@ -83,26 +77,19 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     """Development environment configuration."""
+    SQLALCHEMY_DATABASE_URI = get_env_db_url('development')
     DEBUG = True
 
 
 class TestingConfig(Config):
     """Test environment configuration."""
-    SQLALCHEMY_DATABASE_URI = TESTING_DB_URL
+    SQLALCHEMY_DATABASE_URI = get_env_db_url('testing')
     DEBUG = True
     TESTING = True
 
 
 class ProductionConfig(Config):
     """Production environment configuration."""
-    SQLALCHEMY_DATABASE_URI = PROD_DB_URL
+    SQLALCHEMY_DATABASE_URI = get_env_db_url('production')
     DEBUG = False
     TESTING = False
-
-
-class CacheConfig(object):
-    CACHE_TYPE = 'redis'
-    CACHE_KEY_PREFIX = 'fcache'
-    CACHE_REDIS_HOST = 'localhost'
-    CACHE_REDIS_PORT = '6379'
-    CACHE_REDIS_URL = 'redis://localhost:6379'

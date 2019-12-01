@@ -7,7 +7,7 @@ from app import db, cache
 
 
 @bp.route('/players/<int:id>', methods=['GET'])
-@cache.cached()
+@cache.cached(timeout=60, query_string=True)
 def get_player_id(id):
     """
     Queries database for player corresponding to provided primary key (id)
@@ -18,6 +18,7 @@ def get_player_id(id):
 
 # TODO change this to elasticsearch to account for players with same name
 @bp.route('/players/<string:player_name>', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
 def get_player_name(player_name):
     """
     Queries database for player corresponding to provided player name in URL
@@ -30,20 +31,21 @@ def get_player_name(player_name):
 
 
 @bp.route('/players/index/', methods=['GET'])
-@cache.cached()
+@cache.cached(timeout=60, query_string=True)
 def get_all_players():
     """
     Queries database for the entire player table, paginates results, and
     returns JSON response.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = max(request.args.get('per_page', 50, type=int), 10)
+    per_page = min(request.args.get('per_page', 10, type=int), 50)
     data = Player.to_collection_dict(
         Player.query, page, per_page, 'api.get_all_players')
     return jsonify(data)
 
 
 @bp.route('/players/index/<string:startswith>', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
 def get_player_list_letter(startswith):
     """
     Queries database for all the players whose first name begins with the
@@ -59,6 +61,7 @@ def get_player_list_letter(startswith):
 
 
 @bp.route('/players/search/<string:player_name>', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
 def search_players(player_name):
     """
     Queries elasticsearch server for 'player_name' parameter. Returns list of
