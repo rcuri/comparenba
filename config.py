@@ -70,6 +70,13 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL') or None
     POSTS_PER_PAGE = 25
+    CACHE = {
+        'CACHE_TYPE': 'redis',
+        'CACHE_KEY_PREFIX': 'fcache',
+        'CACHE_REDIS_HOST': 'localhost',
+        'CACHE_REDIS_PORT': '6379',
+        'CACHE_REDIS_URL': 'redis://localhost:6379'
+    }
     DEBUG = False
     TESTING = False
 
@@ -91,3 +98,11 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = PROD_DB_URL
     DEBUG = False
     TESTING = False
+
+
+class CacheConfig(object):
+    CACHE_TYPE = 'redis'
+    CACHE_KEY_PREFIX = 'fcache'
+    CACHE_REDIS_HOST = 'localhost'
+    CACHE_REDIS_PORT = '6379'
+    CACHE_REDIS_URL = 'redis://localhost:6379'

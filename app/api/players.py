@@ -3,10 +3,11 @@ from app.api import bp
 from app.api.auth import auth
 from app.models import Player
 from app.api.errors import bad_request
-from app import db
+from app import db, cache
 
 
 @bp.route('/players/<int:id>', methods=['GET'])
+@cache.cached()
 def get_player_id(id):
     """
     Queries database for player corresponding to provided primary key (id)
@@ -35,7 +36,7 @@ def get_all_players():
     returns JSON response.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = min(request.args.get('per_page', 10, type=int), 50)
+    per_page = min(request.args.get('per_page', 500, type=int), 50)
     data = Player.to_collection_dict(
         Player.query, page, per_page, 'api.get_all_players')
     return jsonify(data)
