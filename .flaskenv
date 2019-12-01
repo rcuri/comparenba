@@ -1,6 +1,6 @@
 FLASK_APP=comparenba.py
 
-#export FLASK_ENV=development
+export FLASK_ENV=development
 
 #development
 export DEV_POSTGRES_URL=localhost
