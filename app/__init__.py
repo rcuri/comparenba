@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from elasticsearch import Elasticsearch
-from config import DevelopmentConfig, ProductionConfig
+from config import DevelopmentConfig
 import os
 
 
@@ -13,7 +13,7 @@ migrate = Migrate()
 cors = CORS()
 
 
-def create_app(config_class=ProductionConfig):
+def create_app(config_class=DevelopmentConfig):
     """
     Flask app factory using DevelopmentConfig (config_class) configuration.
     """
