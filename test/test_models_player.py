@@ -6,10 +6,10 @@ from app import db
 from flask import url_for
 from app.models import Player
 from config import TestingConfig
-from app.populate_players_again import populate_database
 
 
 def test_player_db_create(app):
+    """Test Player table creation."""
     app = app(TestingConfig)
 
     test_model_to_insert = Player(
@@ -22,11 +22,14 @@ def test_player_db_create(app):
 
 
 def test_player_db_empty(app):
+    """Test if Player table is empty upon creation."""
     app = app(TestingConfig)
 
     assert db.session.query(Player).count() == 0
 
+
 def test_player_db_delete(app):
+    """Test Player record deletion."""
     app = app(TestingConfig)
 
     test_model_to_insert = Player(
@@ -41,9 +44,12 @@ def test_player_db_delete(app):
     db.session.delete(test_model_to_insert)
     db.session.commit()
 
-    assert db.session.query(Player).filter_by(player_name='Test Name').first() is None
+    assert db.session.query(Player).filter_by(
+        player_name='Test Name').first() is None
+
 
 def test_valid_player_field(app):
+    """Verify Player fields saved properly."""
     app = app(TestingConfig)
 
     test_model_to_insert = Player(
@@ -98,7 +104,9 @@ def test_valid_player_field(app):
     assert db.session.query(Player).first().blocks == 33.3
     assert db.session.query(Player).first().turnovers == 33.3
 
+
 def test_to_dict_function(app):
+    """Test Player's to_dict() function."""
     app = app(TestingConfig)
 
     test_model_to_insert = Player(
@@ -154,9 +162,12 @@ def test_to_dict_function(app):
     assert data['steals'] == 33.3
     assert data['blocks'] == 33.3
     assert data['turnovers'] == 33.3
-    assert data['_links']['self'] == url_for('api.get_player_id', id=data['id'])
+    assert data['_links']['self'] == url_for(
+        'api.get_player_id', id=data['id'])
+
 
 def test_player_db_repr(app):
+    """Test Player object representation."""
     app = app(TestingConfig)
 
     test_model_to_insert = Player(

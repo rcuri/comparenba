@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def get_env_variable(name):
     """
-    Return value for environment variable 'name' if defined. If not defined,
+    Return value for environment variable (name) if defined. If not defined,
     return KeyError.
     """
     try:
@@ -31,7 +31,7 @@ def get_env_db_url(env_setting):
     you're working in. Environment variables are defined in .flaskenv file.
 
     Create URL to connect app to specific database using create_db_url() and
-    return the resulting string.
+    return the resulting URL string.
     """
     if env_setting == "development":
         POSTGRES_USER = get_env_variable("DEV_POSTGRES_USER")
@@ -50,7 +50,8 @@ def get_env_db_url(env_setting):
         POSTGRES_DB = get_env_variable("PROD_POSTGRES_DB")
 
 
-    return create_db_url(POSTGRES_USER, POSTGRES_PW, POSTGRES_URL, POSTGRES_DB)
+    return create_db_url(
+        POSTGRES_USER, POSTGRES_PW, POSTGRES_URL, POSTGRES_DB)
 
 
 # Get db URLs for each environment

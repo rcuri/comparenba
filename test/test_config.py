@@ -13,6 +13,7 @@ from config import (
 
 
 def test_development_config(app):
+    """Test DevelopmentConfig configuration."""
     app = app(DevelopmentConfig)
     DB_URL = get_env_db_url('development')
     assert app.config['DEBUG']
@@ -20,6 +21,7 @@ def test_development_config(app):
     assert app.config['SQLALCHEMY_DATABASE_URI'] == DB_URL
 
 def test_testing_config(app):
+    """Test TestingConfig configuration."""
     app = app(TestingConfig)
     DB_URL = get_env_db_url("testing")
     assert app.config["DEBUG"]
@@ -29,6 +31,7 @@ def test_testing_config(app):
 
 
 def test_production_config(app):
+    """Test ProductionConfig configuration."""
     app = app(ProductionConfig)
     DB_URL = get_env_db_url("production")
     assert not app.config["DEBUG"]

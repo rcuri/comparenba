@@ -9,6 +9,7 @@ from config import TestingConfig
 
 
 def test_user_db_create(app):
+    """Test User table creation."""
     app = app(TestingConfig)
 
     test_model_to_insert = User(
@@ -19,12 +20,16 @@ def test_user_db_create(app):
 
     assert db.session.query(User).one()
 
+
 def test_user_db_empty(app):
+    """Test if User table is empty upon creation."""
     app = app(TestingConfig)
 
     assert db.session.query(User).count() == 0
 
+
 def test_user_db_delete(app):
+    """Test User record deletion."""
     app = app(TestingConfig)
 
     test_model_to_insert = User(
@@ -39,9 +44,12 @@ def test_user_db_delete(app):
     db.session.delete(test_model_to_insert)
     db.session.commit()
 
-    assert db.session.query(User).filter_by(username='testuser').first() is None
+    assert db.session.query(User).filter_by(
+        username='testuser').first() is None
+
 
 def test_user_name(app):
+    """Test User's username field."""
     app = app(TestingConfig)
 
     test_model_to_insert = User(
@@ -54,6 +62,7 @@ def test_user_name(app):
 
 
 def test_user_hash(app):
+    """Test User's hash_password() and verify_password() function."""
     app = app(TestingConfig)
 
     test_model_to_insert = User(

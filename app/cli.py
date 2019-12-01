@@ -1,7 +1,7 @@
 import os
 import click
 from app import db
-from app.populate_players_again import populate_database
+from app.populate_players import populate_database
 
 def register(app):
     """Register shell script commands."""

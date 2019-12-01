@@ -15,7 +15,8 @@ class SearchableMixin(object):
         Extend query_index function in order to replace list of object IDs
         with actual objects.
         """
-        ids, total, res = query_index(cls.__tablename__, expression, page, per_page)
+        ids, total, res = query_index(
+                cls.__tablename__, expression, page, per_page)
         if total == 0:
             return cls.query.filter_by(id=0), 0, 0
         when = []

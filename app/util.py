@@ -6,9 +6,17 @@ from app import db
 from app.models import Player
 
 def player_urls():
+    """
+    Retrieve all the NBA players' page URLs and return list.
+
+    Using Selenium webdriver to make requests to website and scrape pages
+    using javascript to load content.
+
+    Using ChromeDriver for Chrome version 78.
+    """
     chromeOptions = Options()
     chromeOptions.add_argument('--headless')
-    driver = webdriver.Chrome(chrome_options=chromeOptions)
+    driver = webdriver.Chrome(options=chromeOptions)
 
     bball_ref_url = "https://www.basketball-reference.com"
     base_url = "https://www.basketball-reference.com/players/"
@@ -28,7 +36,12 @@ def player_urls():
     return urls_to_search
 
 
-def selenium_task(worker, data, db, app):
+def selenium_task(worker, data):
+    """
+    Using selenium webdriver (worker), make a request to URL (data) and
+    parse player information. Return Player object created from this
+    information.
+    """
     try:
         worker.get(data)
 
@@ -188,28 +201,40 @@ def selenium_task(worker, data, db, app):
             steals=stls, blocks=blks, turnovers=tov)
         return player
     except Exception as e:
+        # If page failed to load, return URL in order to add back to URL queue
+        # and reattempt to load page
         return e, data
 
 
-def selenium_queue_listener(selenium_workers, data_queue, worker_queue, db, app):
+def selenium_queue_listener(
+        selenium_workers, data_queue, worker_queue, db, app):
+    """
+    Run selenium threads until you have added all NBA players to database.
+    """
     with app.app_context():
         while True:
+            # Get URL in front of the queue
             current_data = data_queue.get()
             if current_data == 'STOP':
-                print("STOP encountered, killing worker thread")
+                # if STOP encountered, kill worker thread
                 data_queue.put(current_data)
                 break
-            else:
-                print(f"Got the item {current_data} on the data queue")
+            # Line below for testing purposes
+            #    else: print(f"Got the item {current_data} on the data queue")
+
+            # Get a webdriver instance from queue using associated worker_id.
+            # Use worker to visit URL and create Player object using
+            # selenium_task. Return worker to queue when finished.
             worker_id = worker_queue.get()
             worker = selenium_workers[worker_id]
-            player = selenium_task(worker, current_data, db, app)
+            player = selenium_task(worker, current_data)
             worker_queue.put(worker_id)
-            print(player)
+
+            # If Player returned from selenium_task, add player to session.
+            # Otherwise, add URL back to queue since the page failed to load.
             if type(player) is Player:
                 db.session.add(player)
             else:
                 data_queue.put(current_data)
-
         db.session.commit()
     return
