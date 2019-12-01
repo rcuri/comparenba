@@ -14,7 +14,7 @@ migrate = Migrate()
 cors = CORS()
 cache = Cache()
 
-def create_app(config_class=DevelopmentConfig):
+def create_app(config_class=ProductionConfig):
     """
     Flask app factory using DevelopmentConfig (config_class) configuration.
     """
