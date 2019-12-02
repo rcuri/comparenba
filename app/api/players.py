@@ -51,12 +51,15 @@ def get_player_list_letter(startswith):
     Queries database for all the players whose first name begins with the
     'startswith' character. Returns paginated results as JSON response.
     """
+    if not startswith[0].isalpha():
+        return bad_request('Keyword startswith must be alpha character')
     page = request.args.get('page', 1, type=int)
     per_page = min(request.args.get('per_page', 10, type=int), 50)
     data = Player.to_collection_dict(
-        Player.query.filter(Player.player_name.startswith(startswith[0])),
-        page, per_page, 'api.get_player_list_letter',
-        startswith=startswith[0])
+            Player.query.filter(
+            Player.player_name.startswith(startswith[0].upper())),
+            page, per_page, 'api.get_player_list_letter',
+            startswith=startswith[0])
     return jsonify(data)
 
 
@@ -68,7 +71,7 @@ def search_players(player_name):
     players matching query, along with total matches found, as a JSON
     response.
     """
-    per_page = 1000
+    per_page = 50
     page = 1
     players = Player.search_to_dict(
         Player.search(player_name, page, per_page))
@@ -144,6 +147,7 @@ def update_player(id):
     If not authenticated:
     Returns a 401 error response.
     """
+    # TODO add data validation for arguments to be updated
     player = Player.query.get_or_404(id)
     data = request.get_json() or {}
     player.from_dict(data)

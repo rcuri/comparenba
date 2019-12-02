@@ -29,7 +29,8 @@ def create_app(config_class='config.DevelopmentConfig'):
     # Register blueprints
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
-
+    from app.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
 
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
             if app.config['ELASTICSEARCH_URL'] else None

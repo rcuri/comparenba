@@ -1,4 +1,4 @@
-from multiprocessing import Queue, cpu_count
+from queue import Queue
 from threading import Thread
 from time import sleep
 from app import db
@@ -24,13 +24,14 @@ def populate_database(db):
     worker_queue = Queue()
 
     # Create multiple instances of webdrivers and assign to them a worker_id
-    num_threads = cpu_count()-1
+    num_threads = 4
     worker_ids = list(range(num_threads))
     chromeOptions = Options()
     chromeOptions.add_argument('--headless')
     selenium_workers = {
         i: webdriver.Chrome(options=chromeOptions) for i in worker_ids
     }
+
     for worker_id in worker_ids:
         worker_queue.put(worker_id)
 

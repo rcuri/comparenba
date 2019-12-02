@@ -2,7 +2,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask import g, url_for, jsonify, request
 from app.models import User
 from app.api import bp
-from app.api.errors import bad_request
+from app.api.errors import bad_request, error_response
 from app import db
 
 
@@ -29,8 +29,10 @@ def new_user():
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
-    return jsonify({'username': user.username}), 201,
-    {'Location': url_for('api.get_user', id=user.id, _external=True)}
+    response = jsonify({'username': user.username})
+    response.status_code = 201
+    response.headers['Location'] = url_for('api.get_user', id=user.id)
+    return response
 
 
 @bp.route('/users/<int:id>', methods=['GET'])
@@ -60,5 +62,10 @@ def verify_password(username, password):
     user = User.query.filter_by(username=username).first()
     if not user or not user.verify_password(password):
         return False
-    g.user = user
     return True
+
+
+@auth.error_handler
+def auth_error():
+    """Sends authentication error back to client."""
+    return error_response(401)

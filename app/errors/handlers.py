@@ -1,7 +1,13 @@
 from flask import render_template, request
 from app import db
 from app.errors import bp
-from app.api.errors import error_response as api_error_response
+from app.api.errors import error_response
+
+
+"""
+These functions modify Flask's global application error handler so that they
+use content negotiation to reply in appropriate response.
+"""
 
 
 def wants_json_response():
@@ -20,7 +26,7 @@ def not_found_error(error):
     client preference.
     """
     if wants_json_response():
-        return api_error_response(404)
+        return error_response(404)
     return render_template('errors/404.html'), 404
 
 
@@ -32,5 +38,7 @@ def internal_error(error):
     """
     db.session.rollback()
     if wants_json_response():
-        return api_error_response(500)
+        return error_response(500)
     return render_template('errors/500.html'), 500
+
+# TODO Add rest of error codes
