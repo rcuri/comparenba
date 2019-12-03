@@ -30,7 +30,7 @@ def get_player_name(player_name):
     return jsonify(player.to_dict())
 
 
-@bp.route('/players/index/', methods=['GET'])
+@bp.route('/players/', methods=['GET'])
 @cache.cached(timeout=60, query_string=True)
 def get_all_players():
     """
@@ -78,7 +78,7 @@ def search_players(player_name):
     return jsonify(players)
 
 
-@bp.route('/players/delete/<int:id>', methods=['DELETE'])
+@bp.route('/players/<int:id>', methods=['DELETE'])
 @auth.login_required
 def delete_player(id):
     """
@@ -130,7 +130,7 @@ def add_player():
     return response
 
 
-@bp.route('/players/update/<int:id>', methods=['PUT'])
+@bp.route('/players/<int:id>', methods=['PUT'])
 @auth.login_required
 def update_player(id):
     """
